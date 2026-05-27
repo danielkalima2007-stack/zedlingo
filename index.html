@@ -350,6 +350,30 @@
 
     .chip:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
     .chip-lang { font-size: 10px; opacity: 0.5; margin-right: 4px; }
+    .mic-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.mic-btn.listening {
+  background: rgba(255,68,68,0.2);
+  border: 1px solid var(--red);
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
 
     .welcome {
       text-align: center;
@@ -577,6 +601,52 @@
     document.getElementById('sendBtn').disabled = false;
     document.getElementById('userInput').focus();
   }
+  const micBtn = document.getElementById('micBtn');
+
+let recognition;
+let listening = false;
+
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.lang = selectedLang === 'bemba'
+    ? 'en-ZM'
+    : 'en-ZM';
+
+  recognition.onstart = () => {
+    listening = true;
+    micBtn.classList.add('listening');
+    micBtn.innerHTML = '🔴';
+  };
+
+  recognition.onend = () => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.innerHTML = '🎤';
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('userInput').value = transcript;
+    autoResize(document.getElementById('userInput'));
+  };
+}
+
+function toggleVoice() {
+  if (!recognition) {
+    alert('Voice recognition not supported on this browser.');
+    return;
+  }
+
+  if (listening) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+}
 </script>
 </body>
 </html>

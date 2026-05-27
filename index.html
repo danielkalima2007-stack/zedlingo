@@ -590,7 +590,7 @@
         addMessage('assistant', data.reply, selectedLang);
         const speech = new SpeechSynthesisUtterance(data.reply);
 
-speech.lang = 'en-US';
+speech.speech.lang = 'en-GB';
 speech.rate = 0.95;
 speech.pitch = 1;
 

@@ -588,6 +588,13 @@
       if (data.reply) {
         conversationHistory.push({ role: 'assistant', content: data.reply });
         addMessage('assistant', data.reply, selectedLang);
+        const speech = new SpeechSynthesisUtterance(data.reply);
+
+speech.lang = 'en-US';
+speech.rate = 0.95;
+speech.pitch = 1;
+
+window.speechSynthesis.speak(speech);
       } else {
         addMessage('assistant', 'Apologize, naipela mulandu. Yezani nangu!', selectedLang);
       }

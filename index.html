@@ -588,7 +588,12 @@
       if (data.reply) {
         conversationHistory.push({ role: 'assistant', content: data.reply });
         addMessage('assistant', data.reply, selectedLang);
-        const speech = new SpeechSynthesisUtterance(data.reply);
+        const cleanText = data.reply
+  .replace(/Ninshi/gi, "Ninshi")
+  .replace(/Chifukwa/gi, "Chikuwka")
+  .replace(/ndiye/gi, "ndi ye");
+
+const speech = new SpeechSynthesisUtterance(cleanText);
 
 speech.lang = 'en-GB';
 speech.rate = 0.9;

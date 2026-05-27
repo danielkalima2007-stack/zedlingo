@@ -590,11 +590,25 @@
         addMessage('assistant', data.reply, selectedLang);
         const speech = new SpeechSynthesisUtterance(data.reply);
 
-speech.speech.lang = 'en-GB';
-speech.rate = 0.95;
+speech.lang = 'en-GB';
+speech.rate = 0.9;
 speech.pitch = 1;
 
-window.speechSynthesis.speak(speech);
+const speakNow = () => {
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    speech.voice = voices.find(v => v.lang.includes('en')) || voices[0];
+  }
+
+  window.speechSynthesis.speak(speech);
+};
+
+if (window.speechSynthesis.getVoices().length === 0) {
+  window.speechSynthesis.onvoiceschanged = speakNow;
+} else {
+  speakNow();
+}
+        
       } else {
         addMessage('assistant', 'Apologize, naipela mulandu. Yezani nangu!', selectedLang);
       }
